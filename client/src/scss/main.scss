@@ -1,0 +1,6 @@
+@use "tailwind.scss";
+@use "fonts/index.scss";
+
+body {
+  @apply font-nunito bg-[#EFEFEF];
+}

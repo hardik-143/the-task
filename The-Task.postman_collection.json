@@ -1,0 +1,439 @@
+{
+  "info": {
+    "name": "The Task",
+    "description": "API collection for The Task project management system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Projects",
+      "description": "Project management endpoints",
+      "item": [
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Project Name\",\n    \"description\": \"Project Description\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/projects",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "projects"]
+            },
+            "description": "Create a new project"
+          }
+        },
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/projects",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "projects"]
+            },
+            "description": "Get all projects for the authenticated user"
+          }
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/projects/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "projects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "project_id_here",
+                  "description": "Project ID"
+                }
+              ]
+            },
+            "description": "Get a specific project by ID"
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Project Name\",\n    \"description\": \"Updated Project Description\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/projects/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "projects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "project_id_here",
+                  "description": "Project ID"
+                }
+              ]
+            },
+            "description": "Update a project"
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/projects/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "projects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "project_id_here",
+                  "description": "Project ID"
+                }
+              ]
+            },
+            "description": "Delete a project"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "description": "Task management endpoints",
+      "item": [
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"project_id\": \"project_id_here\",\n    \"title\": \"Task Title\",\n    \"description\": \"Task Description\",\n    \"priority\": \"medium\",\n    \"due_date\": \"2024-03-20\",\n    \"status\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/tasks",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Create a new task"
+          }
+        },
+        {
+          "name": "Get Project Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/tasks/project/:projectId",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "tasks", "project", ":projectId"],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "project_id_here",
+                  "description": "Project ID"
+                }
+              ]
+            },
+            "description": "Get all tasks for a specific project"
+          }
+        },
+        {
+          "name": "Get Task by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/tasks/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "tasks", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "task_id_here",
+                  "description": "Task ID"
+                }
+              ]
+            },
+            "description": "Get a specific task by ID"
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Task Title\",\n    \"description\": \"Updated Task Description\",\n    \"priority\": \"high\",\n    \"due_date\": \"2024-03-25\",\n    \"status\": \"in_progress\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/tasks/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "tasks", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "task_id_here",
+                  "description": "Task ID"
+                }
+              ]
+            },
+            "description": "Update a task"
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/tasks/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "tasks", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "task_id_here",
+                  "description": "Task ID"
+                }
+              ]
+            },
+            "description": "Delete a task"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Task Assignments",
+      "description": "Task assignment management endpoints",
+      "item": [
+        {
+          "name": "Assign Task to User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"task_id\": \"task_id_here\",\n    \"user_id\": \"user_id_here\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/task-assignments",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "task-assignments"]
+            },
+            "description": "Assign a task to a user"
+          }
+        },
+        {
+          "name": "Remove Task Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/task-assignments/:taskId/:userId",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "task-assignments", ":taskId", ":userId"],
+              "variable": [
+                {
+                  "key": "taskId",
+                  "value": "task_id_here",
+                  "description": "Task ID"
+                },
+                {
+                  "key": "userId",
+                  "value": "user_id_here",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Remove a task assignment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/users",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Get all users"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"user_name_here\",\n    \"email\": \"user_email_here\",\n    \"password\": \"user_password_here\"\n}"
+            },
+            "url": {
+              "raw": "{{SERVER_URL}}/api/users",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Create a new user"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{SERVER_URL}}/api/users/:id",
+              "host": ["{{SERVER_URL}}"],
+              "path": ["api", "users", ":id"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "SERVER_URL",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    }
+  ]
+}
