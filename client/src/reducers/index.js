@@ -3,7 +3,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
-import todoReducer from "./todoSlice";
+import projectsReducer from "./projectSlice";
 const authPersistConfig = {
   key: "auth",
   storage,
@@ -12,17 +12,20 @@ const authPersistConfig = {
 };
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
-const todoPersistConfig = {
-  key: "todos",
+const projectsPersistConfig = {
+  key: "projects",
   storage,
-  whitelist: ["todos"], // only persist todos reducer
-  version: 1,
+  whitelist: [], // only persist projects reducer
 };
-const persistedTodoReducer = persistReducer(todoPersistConfig, todoReducer);
+
+const persistedProjectsReducer = persistReducer(
+  projectsPersistConfig,
+  projectsReducer
+);
 
 const rootReducer = combineReducers({
   auth: persistedAuthReducer,
-  todos: persistedTodoReducer,
+  projects: persistedProjectsReducer,
 });
 
 export default rootReducer;

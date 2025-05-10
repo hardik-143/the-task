@@ -25,7 +25,7 @@ export const register = async (req, res) => {
     await user.save();
 
     // Create session token
-    const session = await SessionToken.createSession(user._id);
+    // const session = await SessionToken.createSession(user._id, user.type);
 
     res.status(STATUS_CODE.CREATED).json({
       message: "User registered successfully",
@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         username: user.username,
         email: user.email,
       },
-      token: session.token,
+      // token: session.token,
     });
   } catch (error) {
     res
@@ -72,7 +72,7 @@ export const login = async (req, res) => {
     }
 
     // Create new session token
-    const session = await SessionToken.createSession(user._id);
+    const session = await SessionToken.createSession(user._id, user.type);
 
     res.json({
       message: "Login successful",
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        apiKey: user.apiKey,
+        type: user.type,
       },
       token: session.token,
     });

@@ -10,7 +10,7 @@ const sessionTokenSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: "User",
     required: true,
   },
   expiresAt: {
@@ -32,20 +32,21 @@ const sessionTokenSchema = new mongoose.Schema({
 });
 
 // Generate a random token
-sessionTokenSchema.statics.generateToken = function (userId) {
-  const user = { id: userId };
+sessionTokenSchema.statics.generateToken = function (userId, userType) {
+  const user = { id: userId, type: userType };
   return generateJWT(user);
 };
 
 // Create a new session token
-sessionTokenSchema.statics.createSession = async function (userId) {
-  const token = this.generateToken(userId);
+sessionTokenSchema.statics.createSession = async function (userId, userType) {
+  const token = this.generateToken(userId, userType);
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7); // Token expires in 7 days
 
   const session = new this({
     token,
     user: userId,
+    userType,
     expiresAt,
   });
 

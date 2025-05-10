@@ -20,7 +20,7 @@ const authenticate = async (req, res, next) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
     // Get user from token
-    const user = await User.findById(payload.userId).select("-password");
+    const user = await User.findById(payload.id).select("-password");
 
     if (!user) {
       return res.status(STATUS_CODE.UNAUTHORIZED).json({

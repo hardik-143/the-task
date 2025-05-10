@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "./User.js";
 
 const projectSchema = new mongoose.Schema(
   {
@@ -11,10 +12,23 @@ const projectSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    created_at: {
-      type: Date,
-      default: Date.now,
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    tasks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Task",
+      },
+    ],
   },
   {
     timestamps: true,

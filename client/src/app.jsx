@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "./pages/auth/LoginForm";
 import RegisterForm from "./pages/auth/RegisterForm";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
-import ApiDocumentation from "./pages/ApiDocumentation";
 
 import "./scss/main.scss";
 import PublicRoute from "./pages/auth/PublicRoute";
@@ -17,7 +16,10 @@ import Logout from "./pages/auth/Logout";
 import { checkAuth } from "./reducers/authSlice";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import Todos from "./pages/Todos";
+import CreateProject from "./pages/CreateProject";
+import AdminRoute from "./pages/auth/AdminRoute";
+import ProjectDetails from "./pages/ProjectDetails";
+
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
@@ -53,9 +55,15 @@ function App() {
           <Route path="/" element={<ProtectedRoute />}>
             <Route path="/logout" element={<Logout />} />
             <Route index element={<Dashboard />} />
-            <Route path="/api-docs" element={<ApiDocumentation />} />
-            <Route path="/todos" element={<Todos />} />
+
+            <Route path="/projects/:id" element={<ProjectDetails />} />
+
+            <Route path="/" element={<AdminRoute />}>
+              <Route path="/projects/create" element={<CreateProject />} />
+            </Route>
           </Route>
+
+          {/* Admin routes */}
 
           {/* Redirect to login for unknown routes */}
           {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}

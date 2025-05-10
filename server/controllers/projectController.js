@@ -1,28 +1,23 @@
+import "../models/User.js";
 import Project from "../models/Project.js";
 import UserProject from "../models/UserProject.js";
 import { STATUS_CODE } from "../helpers/constants.js";
+import Task from "../models/Task.js";
 
 // Create a new project
 const createProject = async (req, res) => {
   try {
     const { name, description } = req.body;
-    const userId = req.user.id; // Assuming user is authenticated and user info is in req.user
+    const { _id } = req.user;
 
-    // Create the project
     const project = new Project({
       name,
       description,
+      createdBy: _id,
+      users: [_id],
     });
 
     await project.save();
-
-    // Create user-project relationship
-    const userProject = new UserProject({
-      user_id: userId,
-      project_id: project._id,
-    });
-
-    await userProject.save();
 
     res.status(STATUS_CODE.CREATED).json({
       success: true,
@@ -39,15 +34,22 @@ const createProject = async (req, res) => {
 // Get all projects for the authenticated user
 const getAllProjects = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const user = req.user;
+    const { _id, type } = user;
 
-    // Find all projects associated with the user
-    const userProjects = await UserProject.find({ user_id: userId }).populate(
-      "project_id"
-    );
+    const projects = await Project.find({ users: { $in: [_id] } })
+      // .populate([
+      //   { path: "createdBy", select: "username email" },
+      //   { path: "users", select: "username email" },
+      // ])
+      .sort({ createdAt: -1 });
 
-    const projects = userProjects.map((up) => up.project_id);
-
+    if (projects.length === 0) {
+      res.status(STATUS_CODE.NOT_FOUND).json({
+        success: false,
+        error: "No projects found",
+      });
+    }
     res.status(STATUS_CODE.OK).json({
       success: true,
       data: projects,
@@ -64,25 +66,14 @@ const getAllProjects = async (req, res) => {
 const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user.id;
-
-    // Check if user has access to this project
-    const userProject = await UserProject.findOne({
-      user_id: userId,
-      project_id: id,
-    });
-
-    if (!userProject) {
-      return res.status(STATUS_CODE.UNAUTHORIZED).json({
-        success: false,
-        error: "You do not have access to this project",
-      });
-    }
-
-    const project = await Project.findById(id);
+    const project = await Project.findById(id).populate([
+      { path: "createdBy" },
+      { path: "users" },
+      { path: "tasks" },
+    ]);
 
     if (!project) {
-      return res.status(STATUS_CODE.BAD_REQUEST).json({
+      res.status(STATUS_CODE.BAD_REQUEST).json({
         success: false,
         error: "Project not found",
       });

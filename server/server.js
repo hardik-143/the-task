@@ -6,6 +6,7 @@ import connectDB from "./db.js";
 import authRoutes from "./routes/auth.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 // Load environment variables
 dotenv.config();
 
@@ -50,21 +51,22 @@ app.use(
 );
 
 // Request logging middleware
-app.use((req, res, next) => {
-  console.log("=== Request Details ===");
-  console.log("Time:", new Date().toISOString());
-  console.log("Method:", req.method);
-  console.log("URL:", req.url);
-  console.log("Headers:", req.headers);
-  console.log("Body:", req.body);
-  console.log("=====================");
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("=== Request Details ===");
+//   console.log("Time:", new Date().toISOString());
+//   console.log("Method:", req.method);
+//   console.log("URL:", req.url);
+//   console.log("Headers:", req.headers);
+//   console.log("Body:", req.body);
+//   console.log("=====================");
+//   next();
+// });
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/projects", projectRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks", taskRoutes);
 // Basic route for testing
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the CRUD API" });
