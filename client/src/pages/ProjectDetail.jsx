@@ -15,11 +15,19 @@ import {
   TASK_PRIORITY_OPTIONS,
   TASK_STATUS_OPTIONS,
 } from "../helpers/constants";
+import { updateTaskDetail } from "../reducers/taskSlice";
 const DragDropBoard = ({ projectTasks, setProjectTasks }) => {
+  const dispatch = useDispatch();
   const [draggedTask, setDraggedTask] = useState(null);
 
   const handleDragStart = (task) => {
     setDraggedTask(task);
+  };
+
+  const updateTaskStatus = async (taskId, status) => {
+    dispatch(updateTaskDetail({ id: taskId, status })).then((res) => {
+      console.log("res", res);
+    });
   };
 
   const handleDrop = (status) => {
@@ -29,6 +37,7 @@ const DragDropBoard = ({ projectTasks, setProjectTasks }) => {
     );
     setProjectTasks(newTasks);
     setDraggedTask(null);
+    updateTaskStatus(draggedTask._id, status);
   };
 
   const allowDrop = (e) => e.preventDefault();
