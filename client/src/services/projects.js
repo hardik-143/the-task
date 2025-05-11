@@ -11,3 +11,7 @@ export const _fetchProjects = async () => {
 export const _fetchProjectById = async (id) => {
   return get(`/projects/${id}`);
 };
+
+export const _fetchProjectTasks = async (id, payload) => {
+  return get(`/projects/${id}/tasks`, payload);
+};

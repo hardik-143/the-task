@@ -69,7 +69,6 @@ const getProjectById = async (req, res) => {
     const project = await Project.findById(id).populate([
       { path: "createdBy" },
       { path: "users" },
-      { path: "tasks" },
     ]);
 
     if (!project) {
@@ -179,10 +178,45 @@ const deleteProject = async (req, res) => {
   }
 };
 
+const getProjectTasks = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // search params
+    const { status, priority } = req.query;
+    const tasks = await Task.find({
+      project_id: id,
+      status:
+        status === "all"
+          ? { $in: ["pending", "in_progress", "completed"] }
+          : status,
+      priority:
+        priority === "all" ? { $in: ["low", "medium", "high"] } : priority,
+    }).populate([{ path: "created_by" }, { path: "assigned_to" }]);
+
+    if (!tasks) {
+      res.status(STATUS_CODE.NOT_FOUND).json({
+        success: false,
+        error: "No tasks found",
+      });
+    }
+
+    res.status(STATUS_CODE.OK).json({
+      success: true,
+      data: tasks,
+    });
+  } catch (error) {
+    res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 export {
   createProject,
   getAllProjects,
   getProjectById,
   updateProject,
   deleteProject,
+  getProjectTasks,
 };

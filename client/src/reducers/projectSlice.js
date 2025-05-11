@@ -3,12 +3,15 @@ import {
   createProject,
   _fetchProjects,
   _fetchProjectById,
+  _fetchProjectTasks,
 } from "../services/projects";
 
 const initialState = {
   projects: [],
+  projectDetail: {},
   loading: false,
   error: null,
+  projectTasks: [],
 };
 
 export const handleCreateProject = createAsyncThunk(
@@ -58,6 +61,25 @@ export const fetchProjectById = createAsyncThunk(
     }
   }
 );
+
+export const fetchProjectTasks = createAsyncThunk(
+  "projects/fetchProjectTasks",
+  async (data, { rejectWithValue }) => {
+    console.log("data", data);
+    const { project_id, filters } = data;
+    try {
+      console.log("filters", filters);
+      const response = await _fetchProjectTasks(project_id, filters);
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Error fetching project tasks"
+      );
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "projects",
   initialState,
@@ -71,9 +93,21 @@ const projectSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setProjectDetail: (state, action) => {
+      state.projectDetail = action.payload;
+    },
+    setProjectTasks: (state, action) => {
+      state.projectTasks = action.payload;
+    },
   },
 });
 
-export const { setProjects, setLoading, setError } = projectSlice.actions;
+export const {
+  setProjects,
+  setLoading,
+  setError,
+  setProjectDetail,
+  setProjectTasks,
+} = projectSlice.actions;
 
 export default projectSlice.reducer;

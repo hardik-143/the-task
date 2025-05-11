@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import CreateProject from "./pages/CreateProject";
 import AdminRoute from "./pages/auth/AdminRoute";
 import ProjectDetails from "./pages/ProjectDetails";
+import { setProjectDetail } from "./reducers/projectSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ function App() {
     // Check if we have a token in localStorage
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("App mounted, checking auth... 00000");
+      dispatch(setProjectDetail({}));
       dispatch(checkAuth());
     }
   }, [dispatch]);
@@ -42,35 +43,33 @@ function App() {
   //   }
 
   return (
-    <div className="min-h-screen ">
-      <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route element={<PublicRoute />}>
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<RegisterForm />} />
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+        </Route>
+
+        {/* Protected routes */}
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/logout" element={<Logout />} />
+          <Route index element={<Dashboard />} />
+
+          <Route path="/projects/:id" element={<ProjectDetails />} />
+
+          <Route path="/" element={<AdminRoute />}>
+            <Route path="/projects/create" element={<CreateProject />} />
           </Route>
+        </Route>
 
-          {/* Protected routes */}
-          <Route path="/" element={<ProtectedRoute />}>
-            <Route path="/logout" element={<Logout />} />
-            <Route index element={<Dashboard />} />
+        {/* Admin routes */}
 
-            <Route path="/projects/:id" element={<ProjectDetails />} />
-
-            <Route path="/" element={<AdminRoute />}>
-              <Route path="/projects/create" element={<CreateProject />} />
-            </Route>
-          </Route>
-
-          {/* Admin routes */}
-
-          {/* Redirect to login for unknown routes */}
-          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </div>
+        {/* Redirect to login for unknown routes */}
+        {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 

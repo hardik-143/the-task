@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getFullUrl, getHeaders } from "../helpers/utils";
 
-export const get = async (endpoint, data) => {
+export const get = async (endpoint, params = null) => {
   const url = getFullUrl(endpoint);
-  console.log("GET Request:", { url, data });
-  return commonFetch(url, "GET", data);
+  console.log("GET Request:", { url, params });
+  return commonFetch(url, "GET", null, params);
 };
 
 export const post = async (endpoint, data) => {
@@ -13,7 +13,7 @@ export const post = async (endpoint, data) => {
   return commonFetch(url, "POST", data);
 };
 
-export const commonFetch = async (url, method, data) => {
+export const commonFetch = async (url, method, data, params) => {
   try {
     const headers = getHeaders();
     console.log("Request Config:", { url, method, data, headers });
@@ -23,6 +23,7 @@ export const commonFetch = async (url, method, data) => {
       method,
       data,
       headers,
+      params,
     });
 
     console.log("Response:", response.data);

@@ -14,7 +14,7 @@ export default function Dashboard() {
   }, []);
   return (
     <>
-      <div className="">
+      <div className="flex flex-col ">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold mb-4">Projects</h2>
           {user.type === "admin" && (

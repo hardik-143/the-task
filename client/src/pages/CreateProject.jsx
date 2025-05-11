@@ -28,7 +28,7 @@ const CreateProject = () => {
   };
 
   return (
-    <div className="min-h-screen  py-6 flex flex-col sm:py-12">
+    <div className="flex flex-col ">
       <div className="relative py-3 ">
         <div className="relative px-4 py-10  mx-8 md:mx-0  rounded-3xl sm:p-10">
           <div className="max-w-[600px] mx-auto">

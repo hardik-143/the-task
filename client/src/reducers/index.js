@@ -15,7 +15,7 @@ const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 const projectsPersistConfig = {
   key: "projects",
   storage,
-  whitelist: [], // only persist projects reducer
+  whitelist: ["projectDetail"], // only persist projects reducer
 };
 
 const persistedProjectsReducer = persistReducer(
