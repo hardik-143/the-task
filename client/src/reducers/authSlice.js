@@ -45,9 +45,7 @@ export const register = createAsyncThunk(
   async (data, { dispatch }) => {
     try {
       const response = await _register(data);
-      dispatch(registerSuccess(response));
-      localStorage.setItem("token", response.token);
-      navigate("/dashboard");
+      return response;
     } catch (error) {
       console.log("register error", error);
       dispatch(

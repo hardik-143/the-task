@@ -17,14 +17,12 @@ export default function Dashboard() {
       <div className="flex flex-col ">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold mb-4">Projects</h2>
-          {user.type === "admin" && (
             <Link
               to="/projects/create"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
             >
               Create Project
             </Link>
-          )}
         </div>
         <div className="grid grid-cols-3 gap-4">
           {projects.map((project, index) => (

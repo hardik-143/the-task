@@ -7,6 +7,7 @@ import {
   updateProject,
   deleteProject,
   getProjectTasks,
+  getProjectUsers,
 } from "../controllers/projectController.js";
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.delete("/:id", deleteProject);
 
 // Get all tasks for a project
 router.get("/:id/tasks", getProjectTasks);
+
+// Get all users for a project
+router.get("/:id/users", getProjectUsers);
 
 export default router;

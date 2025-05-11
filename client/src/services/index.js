@@ -13,6 +13,18 @@ export const post = async (endpoint, data) => {
   return commonFetch(url, "POST", data);
 };
 
+export const put = async (endpoint, data) => {
+  const url = getFullUrl(endpoint);
+  console.log("PUT Request:", { url, data });
+  return commonFetch(url, "PUT", data);
+};
+
+export const del = async (endpoint, data) => {
+  const url = getFullUrl(endpoint);
+  console.log("DELETE Request:", { url, data });
+  return commonFetch(url, "DELETE", data);
+};
+
 export const commonFetch = async (url, method, data, params) => {
   try {
     const headers = getHeaders();

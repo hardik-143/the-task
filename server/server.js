@@ -32,8 +32,8 @@ app.use(
 );
 
 // Body parsing middleware - MUST be before routes
-app.use(express.json({ limit: "50mb" })); // parse json bodies in the request
-app.use(express.urlencoded({ extended: true, limit: "50mb" })); // parse urlencoded bodies in the request
+app.use(express.json()); // parse json bodies in the request
+app.use(express.urlencoded({ extended: true })); // parse urlencoded bodies in the request
 
 // Session configuration
 app.use(

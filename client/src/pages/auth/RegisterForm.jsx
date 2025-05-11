@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { register, clearError } from "../../reducers/authSlice";
+import {
+  register,
+  clearError,
+  registerSuccess,
+} from "../../reducers/authSlice";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -21,15 +25,15 @@ const RegisterForm = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     dispatch(clearError());
-
-    try {
-      dispatch(register(formData));
-    } catch (error) {
-      console.error("Registration error:", error);
-    }
+    dispatch(register(formData)).then((res) => {
+      if (res.payload) {
+        dispatch(registerSuccess(res.payload));
+        localStorage.setItem("token", res.payload.token);
+        navigate("/login");
+      }
+    });
   };
 
   return (
@@ -56,7 +60,7 @@ const RegisterForm = () => {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="username" className="sr-only">
@@ -107,7 +111,8 @@ const RegisterForm = () => {
 
           <div>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             >

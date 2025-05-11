@@ -4,6 +4,9 @@ import {
   _fetchProjects,
   _fetchProjectById,
   _fetchProjectTasks,
+  _fetchUsersForProject,
+  _fetchProjectUsers,
+  _updateProject,
 } from "../services/projects";
 
 const initialState = {
@@ -16,9 +19,9 @@ const initialState = {
 
 export const handleCreateProject = createAsyncThunk(
   "projects/handleCreateProject",
-  async (projectData, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await createProject(projectData);
+      const response = await createProject({ ...data });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -80,6 +83,50 @@ export const fetchProjectTasks = createAsyncThunk(
   }
 );
 
+export const fetchUsersForProject = createAsyncThunk(
+  "projects/fetchUsersForProject",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await _fetchUsersForProject(data);
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Error fetching users for project"
+      );
+    }
+  }
+);
+
+export const fetchProjectUsers = createAsyncThunk(
+  "projects/fetchProjectUsers",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await _fetchProjectUsers(data);
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Error fetching users for project"
+      );
+    }
+  }
+);
+
+export const updateProject = createAsyncThunk(
+  "projects/updateProject",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await _updateProject(data.id, data.data);
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Error updating project"
+      );
+    }
+  }
+);
 const projectSlice = createSlice({
   name: "projects",
   initialState,

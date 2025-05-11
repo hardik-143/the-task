@@ -12,6 +12,27 @@ export const TASK_STATUS_OPTIONS = [
   { label: "Completed", value: TASK_STATUS.COMPLETED },
 ];
 
+export const TASK_STATUS_COLORS = {
+  [TASK_STATUS.PENDING]: {
+    borderLeftColor: "border-l-yellow-500",
+    borderColor: "border-yellow-500",
+    bgColor: "bg-yellow-500",
+    textColor: "text-yellow-500",
+  },
+  [TASK_STATUS.IN_PROGRESS]: {
+    borderLeftColor: "border-l-blue-500",
+    borderColor: "border-blue-500",
+    bgColor: "bg-blue-500",
+    textColor: "text-blue-500",
+  },
+  [TASK_STATUS.COMPLETED]: {
+    borderLeftColor: "border-l-green-500",
+    borderColor: "border-green-500",
+    bgColor: "bg-green-500",
+    textColor: "text-green-500",
+  },
+};
+
 export const TASK_PRIORITY = {
   LOW: "low",
   MEDIUM: "medium",
@@ -19,9 +40,24 @@ export const TASK_PRIORITY = {
 };
 
 export const TASK_PRIORITY_COLORS = {
-  [TASK_PRIORITY.LOW]: "border-l-green-500",
-  [TASK_PRIORITY.MEDIUM]: "border-l-yellow-500",
-  [TASK_PRIORITY.HIGH]: "border-l-red-500",
+  [TASK_PRIORITY.LOW]: {
+    borderLeftColor: "border-l-green-500",
+    borderColor: "border-green-500",
+    bgColor: "bg-green-500",
+    textColor: "text-green-500",
+  },
+  [TASK_PRIORITY.MEDIUM]: {
+    borderLeftColor: "border-l-yellow-500",
+    borderColor: "border-yellow-500",
+    bgColor: "bg-yellow-500",
+    textColor: "text-yellow-500",
+  },
+  [TASK_PRIORITY.HIGH]: {
+    borderLeftColor: "border-l-red-500",
+    borderColor: "border-red-500",
+    bgColor: "bg-red-500",
+    textColor: "text-red-500",
+  },
 };
 
 export const TASK_PRIORITY_OPTIONS = [

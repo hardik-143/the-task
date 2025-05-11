@@ -5,8 +5,7 @@ import { STATUS_CODE } from "../helpers/constants.js";
 // Create a new task
 const createTask = async (req, res) => {
   try {
-    const { title, description, priority, status, projectId, assignedTo } =
-      req.body;
+    const { title, description, priority, projectId, assignedTo } = req.body;
     const { _id } = req.user;
 
     // Check if project exists and user has access
@@ -29,7 +28,6 @@ const createTask = async (req, res) => {
       title,
       description,
       priority,
-      status,
       project_id: projectId,
       created_by: _id,
       assigned_to: assignedTo || _id,
@@ -60,9 +58,19 @@ const getTaskById = async (req, res) => {
     const { _id } = req.user;
 
     const task = await Task.findById(id).populate([
-      { path: "createdBy", select: "username email" },
-      { path: "assignedTo", select: "username email" },
-      { path: "project" },
+      { path: "created_by" },
+      { path: "assigned_to" },
+      {
+        path: "project_id",
+        populate: [
+          {
+            path: "users",
+          },
+          {
+            path: "createdBy",
+          },
+        ],
+      },
     ]);
 
     if (!task) {
@@ -73,17 +81,21 @@ const getTaskById = async (req, res) => {
     }
 
     // Check if user has access to the project
-    const project = await Project.findById(task.project);
-    if (!project.users.includes(_id)) {
-      return res.status(STATUS_CODE.FORBIDDEN).json({
-        success: false,
-        error: "You don't have access to this task",
-      });
-    }
+    // const project = await Project.findById(task.project);
+    // if (!project.users.includes(_id)) {
+    //   return res.status(STATUS_CODE.FORBIDDEN).json({
+    //     success: false,
+    //     error: "You don't have access to this task",
+    //   });
+    // }
+
+    const taskObject = task.toObject();
+    taskObject.project = taskObject.project_id;
+    delete taskObject.project_id;
 
     res.status(STATUS_CODE.OK).json({
       success: true,
-      data: task,
+      data: taskObject,
     });
   } catch (error) {
     res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({
@@ -97,7 +109,7 @@ const getTaskById = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, priority, status, assignedTo } = req.body;
+    const { title, description, priority, status, assigned_to } = req.body;
     const { _id } = req.user;
 
     const task = await Task.findById(id);
@@ -108,32 +120,37 @@ const updateTask = async (req, res) => {
       });
     }
 
-    // Check if user has access to the project
-    const project = await Project.findById(task.project);
-    if (!project.users.includes(_id)) {
-      return res.status(STATUS_CODE.FORBIDDEN).json({
-        success: false,
-        error: "You don't have access to this task",
-      });
-    }
-
-    // Update task fields
     task.title = title || task.title;
     task.description = description || task.description;
     task.priority = priority || task.priority;
     task.status = status || task.status;
-    task.assignedTo = assignedTo || task.assignedTo;
+    task.assigned_to = assigned_to || task.assigned_to;
 
     await task.save();
 
     await task.populate([
-      { path: "createdBy", select: "username email" },
-      { path: "assignedTo", select: "username email" },
+      { path: "created_by", select: "username email" },
+      { path: "assigned_to", select: "username email" },
+      {
+        path: "project_id",
+        populate: [
+          {
+            path: "users",
+          },
+          {
+            path: "createdBy",
+          },
+        ],
+      },
     ]);
+
+    const taskObject = task.toObject();
+    taskObject.project = taskObject.project_id;
+    delete taskObject.project_id;
 
     res.status(STATUS_CODE.OK).json({
       success: true,
-      data: task,
+      data: taskObject,
     });
   } catch (error) {
     res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({
@@ -158,7 +175,7 @@ const deleteTask = async (req, res) => {
     }
 
     // Check if user has access to the project
-    const project = await Project.findById(task.project);
+    const project = await Project.findById(task.project_id);
     if (!project.users.includes(_id)) {
       return res.status(STATUS_CODE.FORBIDDEN).json({
         success: false,

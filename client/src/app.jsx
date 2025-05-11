@@ -18,8 +18,11 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import CreateProject from "./pages/CreateProject";
 import AdminRoute from "./pages/auth/AdminRoute";
-import ProjectDetails from "./pages/ProjectDetails";
+import ProjectDetail from "./pages/ProjectDetail";
 import { setProjectDetail } from "./reducers/projectSlice";
+import TaskDetail from "./pages/TaskDetail";
+import CreateTask from "./pages/CreateTask";
+import EditProject from "./pages/EditProject";
 
 function App() {
   const dispatch = useDispatch();
@@ -56,11 +59,14 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route index element={<Dashboard />} />
 
-          <Route path="/projects/:id" element={<ProjectDetails />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
 
-          <Route path="/" element={<AdminRoute />}>
-            <Route path="/projects/create" element={<CreateProject />} />
-          </Route>
+          {/* <Route path="/" element={<AdminRoute />}> */}
+          {/* </Route> */}
+          <Route path="/projects/create" element={<CreateProject />} />
+          <Route path="/projects/:id/create-task" element={<CreateTask />} />
+          <Route path="/projects/:id/edit" element={<EditProject />} />
+          <Route path="/task/:id" element={<TaskDetail />} />
         </Route>
 
         {/* Admin routes */}

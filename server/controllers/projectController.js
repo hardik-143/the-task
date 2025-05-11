@@ -7,14 +7,14 @@ import Task from "../models/Task.js";
 // Create a new project
 const createProject = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, users } = req.body;
     const { _id } = req.user;
 
     const project = new Project({
       name,
       description,
       createdBy: _id,
-      users: [_id],
+      users: [...users, _id],
     });
 
     await project.save();
@@ -94,25 +94,24 @@ const getProjectById = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
-    const userId = req.user.id;
+    const { name, description, users } = req.body;
 
     // Check if user has access to this project
-    const userProject = await UserProject.findOne({
-      user_id: userId,
-      project_id: id,
-    });
+    // const userProject = await UserProject.findOne({
+    //   user_id: userId,
+    //   project_id: id,
+    // });
 
-    if (!userProject) {
-      return res.status(STATUS_CODE.UNAUTHORIZED).json({
-        success: false,
-        error: "You do not have access to this project",
-      });
-    }
+    // if (!userProject) {
+    //   return res.status(STATUS_CODE.UNAUTHORIZED).json({
+    //     success: false,
+    //     error: "You do not have access to this project",
+    //   });
+    // }
 
     const project = await Project.findByIdAndUpdate(
       id,
-      { name, description },
+      { name, description, users },
       { new: true, runValidators: true }
     );
 
@@ -182,15 +181,20 @@ const getProjectTasks = async (req, res) => {
   try {
     const { id } = req.params;
     // search params
-    const { status, priority } = req.query;
+    const { status, priority, assigned_to } = req.query;
+    const extraFilters = {};
+    if (assigned_to !== "all") {
+      extraFilters.assigned_to = assigned_to;
+    }
+    if (status !== "all") {
+      extraFilters.status = status;
+    }
+    if (priority !== "all") {
+      extraFilters.priority = priority;
+    }
     const tasks = await Task.find({
       project_id: id,
-      status:
-        status === "all"
-          ? { $in: ["pending", "in_progress", "completed"] }
-          : status,
-      priority:
-        priority === "all" ? { $in: ["low", "medium", "high"] } : priority,
+      ...extraFilters,
     }).populate([{ path: "created_by" }, { path: "assigned_to" }]);
 
     if (!tasks) {
@@ -212,6 +216,22 @@ const getProjectTasks = async (req, res) => {
   }
 };
 
+const getProjectUsers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const users = await Project.findById(id).populate("users");
+    res.status(STATUS_CODE.OK).json({
+      success: true,
+      data: users.users,
+    });
+  } catch (error) {
+    res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 export {
   createProject,
   getAllProjects,
@@ -219,4 +239,5 @@ export {
   updateProject,
   deleteProject,
   getProjectTasks,
+  getProjectUsers,
 };

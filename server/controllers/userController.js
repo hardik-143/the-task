@@ -13,6 +13,28 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+export const getUsersForProject = async (req, res) => {
+  // search in username,email
+  const { search } = req.query;
+  try {
+    const user = await User.find({
+      $or: [
+        { username: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ],
+    }).select("-password");
+    if (!user) {
+      return res
+        .status(STATUS_CODE.NOT_FOUND)
+        .json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res
+      .status(STATUS_CODE.INTERNAL_SERVER_ERROR)
+      .json({ message: "Error fetching user", error: error.message });
+  }
+};
 // Get user by ID
 export const getUserById = async (req, res) => {
   try {
