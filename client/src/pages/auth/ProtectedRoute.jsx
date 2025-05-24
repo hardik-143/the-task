@@ -13,7 +13,7 @@ const ProtectedRoute = () => {
 
   if (!authToken) {
     console.log("Not authenticated, redirecting to login...");
-    return <Navigate to={`/login?from=${location.pathname}`} replace />;
+    return <Navigate to={`/login`} state={{ from: location }} replace />;
   }
 
   return (

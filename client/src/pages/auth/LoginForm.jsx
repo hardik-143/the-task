@@ -27,12 +27,16 @@ const LoginForm = () => {
     e.preventDefault();
     dispatch(clearError());
 
-    const queryParams = new URLSearchParams(location.search);
-    const from = queryParams.get("from");
-
-    console.log("from", from);
+    console.log("location.state", location.state);
     try {
-      dispatch(handleLogin({ ...formData, from }));
+      dispatch(handleLogin({ ...formData, from: location.state?.from }))
+        .then((res) => {
+          console.log("res", res);
+          navigate(res.payload);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     } catch (error) {
       console.error("Login error:", error);
     }
