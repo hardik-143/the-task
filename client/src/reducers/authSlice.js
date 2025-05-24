@@ -65,7 +65,8 @@ export const handleLogin = createAsyncThunk(
       console.log("login", response);
       dispatch(loginSuccess(response));
       localStorage.setItem("token", response.token);
-      navigate("/dashboard");
+      console.log("data.from", data.from);
+      navigate(data.from || "/dashboard");
     } catch (error) {
       dispatch(setError(error.response?.data?.message || "Login failed"));
       throw error;

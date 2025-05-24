@@ -27,8 +27,12 @@ const LoginForm = () => {
     e.preventDefault();
     dispatch(clearError());
 
+    const queryParams = new URLSearchParams(location.search);
+    const from = queryParams.get("from");
+
+    console.log("from", from);
     try {
-      dispatch(handleLogin(formData));
+      dispatch(handleLogin({ ...formData, from }));
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -99,7 +103,11 @@ const LoginForm = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10 w-5 h-5"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
