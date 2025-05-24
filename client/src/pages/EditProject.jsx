@@ -91,10 +91,12 @@ const EditProject = () => {
       setProjectDetail({
         name: projectDetail.name,
         description: projectDetail.description,
-        users: projectDetail.users.map((user) => ({
-          label: user.username,
-          value: user._id,
-        })),
+        users: projectDetail.users
+          .map((user) => ({
+            label: user.username,
+            value: user._id,
+          }))
+          .filter((user) => user.value !== projectDetail.createdBy._id),
       });
     });
   }, [dispatch, id]);
