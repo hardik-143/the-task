@@ -1,28 +1,34 @@
 import { useSelector, useDispatch } from "react-redux";
 import { handleLogout } from "../reducers/authSlice";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchProjects } from "../reducers/projectSlice";
 
 export default function Dashboard() {
   const { user } = useSelector((state) => state.auth);
-  const { projects } = useSelector((state) => state.projects);
   const dispatch = useDispatch();
 
+  const [projects, setProjects] = useState([]);
   useEffect(() => {
-    dispatch(fetchProjects());
+    dispatch(fetchProjects())
+      .then((res) => {
+        setProjects(res.payload);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   return (
     <>
       <div className="flex flex-col ">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Projects</h2>
-            <Link
-              to="/projects/create"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Create Project
-            </Link>
+          <Link
+            to="/projects/create"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Create Project
+          </Link>
         </div>
         <div className="grid grid-cols-3 gap-4">
           {projects.map((project, index) => (

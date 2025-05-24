@@ -18,14 +18,13 @@ const { Option } = Select;
 export default function TaskDetail() {
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
-  const { taskDetail } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [isTaskOwner, setIsTaskOwner] = useState(false);
   const [isTaskAssignedToMe, setIsTaskAssignedToMe] = useState(false);
+  const [taskDetail, setTaskDetail] = useState(null);
 
   const updateTaskPermissions = (taskDetail) => {
-    console.log(" 00000", taskDetail, user);
     if (taskDetail?.created_by?._id === user?.id) {
       setIsTaskOwner(true);
     } else {
@@ -47,7 +46,7 @@ export default function TaskDetail() {
     dispatch(fetchTaskById(id)).then((res) => {
       let taskDetail = res.payload;
       updateTaskPermissions(taskDetail);
-      dispatch(setTaskDetail(taskDetail));
+      setTaskDetail(taskDetail);
     });
   }, [id]);
 
@@ -55,7 +54,7 @@ export default function TaskDetail() {
     dispatch(updateTaskDetail({ id, [key]: value })).then((res) => {
       let taskDetail = res.payload;
       updateTaskPermissions(taskDetail);
-      dispatch(setTaskDetail(taskDetail));
+      setTaskDetail(taskDetail);
     });
   };
 

@@ -10,10 +10,8 @@ import {
 } from "../services/projects";
 
 const initialState = {
-  projects: [],
   loading: false,
   error: null,
-  projectTasks: [],
 };
 
 export const handleCreateProject = createAsyncThunk(
@@ -35,10 +33,6 @@ export const fetchProjects = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await _fetchProjects();
-      const { data } = response;
-
-      dispatch(setProjects(data));
-
       return response.data;
     } catch (error) {
       console.log("error", error);
@@ -130,20 +124,11 @@ const projectSlice = createSlice({
   name: "projects",
   initialState,
   reducers: {
-    setProjects: (state, action) => {
-      state.projects = action.payload;
-    },
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
     setError: (state, action) => {
       state.error = action.payload;
-    },
-    setProjectDetail: (state, action) => {
-      state.projectDetail = action.payload;
-    },
-    setProjectTasks: (state, action) => {
-      state.projectTasks = action.payload;
     },
   },
 });

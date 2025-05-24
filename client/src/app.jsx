@@ -32,7 +32,6 @@ function App() {
     // Check if we have a token in localStorage
     const token = localStorage.getItem("token");
     if (token) {
-      dispatch(setProjectDetail({}));
       dispatch(checkAuth());
     }
   }, [dispatch]);
