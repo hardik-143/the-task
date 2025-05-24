@@ -81,9 +81,8 @@ const DragDropBoard = ({ projectTasks, setProjectTasks }) => {
 };
 const ProjectDetail = () => {
   const { id } = useParams();
-  const { projectDetail, projectTasks } = useSelector(
-    (state) => state.projects
-  );
+  const [projectDetail, setProjectDetail] = useState(null);
+  const [projectTasks, setProjectTasks] = useState([]);
   const { user } = useSelector((state) => state.auth);
   //   const navigate = useNavigate();
 
@@ -111,7 +110,7 @@ const ProjectDetail = () => {
       } else {
         setIsProjectOwner(false);
       }
-      dispatch(setProjectDetail(projectDetail));
+      setProjectDetail(projectDetail);
     });
   };
 
@@ -121,7 +120,7 @@ const ProjectDetail = () => {
       project_id: id,
     };
     dispatch(fetchProjectTasks(payload)).then((res) => {
-      dispatch(setProjectTasks(res.payload));
+      setProjectTasks(res.payload);
     });
   };
 
@@ -229,9 +228,7 @@ const ProjectDetail = () => {
       <div className="flex flex-1">
         <DragDropBoard
           projectTasks={projectTasks}
-          setProjectTasks={(tasks) => {
-            dispatch(setProjectTasks(tasks));
-          }}
+          setProjectTasks={setProjectTasks}
         />
         {/* <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Tasks</h2>

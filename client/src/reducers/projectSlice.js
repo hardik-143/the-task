@@ -11,7 +11,6 @@ import {
 
 const initialState = {
   projects: [],
-  projectDetail: {},
   loading: false,
   error: null,
   projectTasks: [],

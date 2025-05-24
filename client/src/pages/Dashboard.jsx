@@ -15,8 +15,8 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex flex-col ">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold mb-4">Projects</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Projects</h2>
             <Link
               to="/projects/create"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"

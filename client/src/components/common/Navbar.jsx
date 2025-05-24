@@ -11,7 +11,7 @@ const Navbar = () => {
       <div className="custom-container !py-4">
         <div className="flex justify-between items-center">
           <Link to={"/"} className="text-2xl font-bold text-gray-800">
-            The crud
+            The Task
           </Link>
           <div className="flex items-center gap-4">
             <h3 className="text-gray-600">

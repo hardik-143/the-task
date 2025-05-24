@@ -6,6 +6,8 @@ import {
   setTaskDetail,
   updateTaskDetail,
 } from "../reducers/taskSlice";
+import { Tooltip } from "antd";
+
 import { useEffect, useState } from "react";
 import {
   TASK_PRIORITY_OPTIONS,
@@ -85,38 +87,64 @@ export default function TaskDetail() {
         </div>
         <div className="flex gap-4">
           <div className="flex gap-2 items-center">
-            <Select
-              value={taskDetail?.status}
-              className="min-w-[150px]"
-              onChange={(value) => {
-                handleTaskDetailChange(value, "status");
-              }}
-              disabled={!isTaskAssignedToMe && !isProjectOwner} // only task assigned to me or project owner can change status
+            <label htmlFor="status" className="text-gray-600">
+              Status
+            </label>
+            <Tooltip
+              title={
+                !isTaskAssignedToMe && !isProjectOwner
+                  ? "Only task assigned to me or project owner can change status"
+                  : null
+              }
             >
-              {TASK_STATUS_OPTIONS.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
+              <Select
+                id="status"
+                value={taskDetail?.status}
+                className="min-w-[150px]"
+                onChange={(value) => {
+                  handleTaskDetailChange(value, "status");
+                }}
+                disabled={!isTaskAssignedToMe && !isProjectOwner} // only task assigned to me or project owner can change status
+              >
+                {TASK_STATUS_OPTIONS.map((option) => (
+                  <Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </Tooltip>
           </div>
           <div className="flex gap-2 items-center">
-            <Select
-              value={taskDetail?.priority}
-              className="min-w-[150px]"
-              onChange={(value) => {
-                handleTaskDetailChange(value, "priority");
-              }}
-              disabled={!isTaskOwner && !isProjectOwner} // only task owner [who created the task] or project owner can change priority
+            <label htmlFor="priority" className="text-gray-600">
+              Priority
+            </label>
+            <Tooltip
+              title={
+                !isTaskOwner && !isProjectOwner
+                  ? "Only task owner [who created the task] or project owner can change priority"
+                  : null
+              }
             >
-              {TASK_PRIORITY_OPTIONS.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
+              <Select
+                value={taskDetail?.priority}
+                className="min-w-[150px]"
+                onChange={(value) => {
+                  handleTaskDetailChange(value, "priority");
+                }}
+                disabled={!isTaskOwner && !isProjectOwner} // only task owner [who created the task] or project owner can change priority
+              >
+                {TASK_PRIORITY_OPTIONS.map((option) => (
+                  <Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </Tooltip>
           </div>
           <div className="flex gap-2 items-center">
+            <label htmlFor="assigned_to" className="text-gray-600">
+              Assigned To
+            </label>
             <Select
               value={taskDetail?.assigned_to?._id}
               className="min-w-[150px]"
@@ -135,7 +163,15 @@ export default function TaskDetail() {
         <hr />
         <div className="flex flex-col gap-4">
           <h2 className="text-lg font-bold text-gray-900">Task Description</h2>
-          <div className="text-gray-600">{taskDetail?.description}</div>
+          <div
+            className={` ${
+              !taskDetail?.description
+                ? "italic text-gray-400"
+                : "text-gray-600"
+            }`}
+          >
+            {taskDetail?.description || "No description"}
+          </div>
         </div>
         <hr />
         <div className="flex flex-col gap-4">
