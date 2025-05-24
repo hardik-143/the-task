@@ -67,6 +67,29 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
+
+// ------------------------------
+// Test routes for email functionality
+import {
+  sendEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+} from "./helpers/emailHelper.js";
+
+// Test route for welcome email
+app.get("/test/welcome-email", async (req, res) => {
+  try {
+    const result = await sendWelcomeEmail(
+      req.query.to || "desaihardik1433@gmail.com",
+      req.query.name || "Hardik"
+    );
+    res.json({ success: true, message: "Welcome email sent", result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+// ------------------------------
+
 // Basic route for testing
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the CRUD API" });
