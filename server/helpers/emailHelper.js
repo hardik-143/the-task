@@ -1,7 +1,14 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import pug from "pug";
+import path from "path";
+import { fileURLToPath } from "url";
+import juice from "juice";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Create reusable transporter object using SMTP transport
 const transporter = nodemailer.createTransport({
@@ -24,23 +31,61 @@ transporter.verify(function (error, success) {
 });
 
 /**
+ * Render a Pug template
+ * @param {string} template - Template name (without .pug extension)
+ * @param {Object} data - Data to pass to the template
+ * @returns {string} - Rendered HTML with inlined styles
+ */
+const renderTemplate = (template, data) => {
+  const templatePath = path.join(
+    __dirname,
+    "..",
+    "templates",
+    "emails",
+    `${template}.pug`
+  );
+  // const styleStr = `
+  //   <style>
+  //     .btn {
+  //       background-color: #007bff;
+  //       padding: 10px 20px;
+  //       color: white;
+  //       text-decoration: none;
+  //       border-radius: 5px;
+  //       display: inline-block;
+  //       margin: 10px 0;
+  //     }
+  //   </style>
+  // `;
+  const renderedTemplate = pug.renderFile(templatePath, data);
+  // const htmlWithStyles = renderedTemplate.replace(
+  //   "</head>",
+  //   `${styleStr}</head>`
+  // );
+  return juice(renderedTemplate);
+};
+
+/**
  * Send an email
  * @param {Object} options - Email options
  * @param {string} options.to - Recipient email address
  * @param {string} options.subject - Email subject
- * @param {string} options.text - Plain text version of the email
- * @param {string} [options.html] - HTML version of the email
+ * @param {string} options.template - Template name (without .pug extension)
+ * @param {Object} options.templateData - Data to pass to the template
  * @param {Array} [options.attachments] - Array of attachments
  * @returns {Promise} - Promise that resolves when email is sent
  */
 export const sendEmail = async ({
   to,
   subject,
-  text,
-  html,
+  template,
+  templateData,
   attachments = [],
 }) => {
   try {
+    const html = renderTemplate(template, templateData);
+    const text = html.replace(/<[^>]*>/g, ""); // Strip HTML tags for plain text version
+
     const mailOptions = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to,
@@ -66,20 +111,17 @@ export const sendEmail = async ({
  * @returns {Promise} - Promise that resolves when email is sent
  */
 export const sendWelcomeEmail = async (email, name) => {
-  const subject = "Welcome to Our Platform!";
-  const text = `Hi ${name},\n\nWelcome to our platform! We're excited to have you on board.\n\nBest regards,\nThe Team`;
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Welcome to Our Platform!</h2>
-      <p>Hi ${name},</p>
-      <p>We're excited to have you on board! Thank you for joining our platform.</p>
-      <p>If you have any questions, feel free to reach out to our support team.</p>
-      <br>
-      <p>Best regards,<br>The Team</p>
-    </div>
-  `;
-
-  return sendEmail({ to: email, subject, text, html });
+  const loginUrl = `${process.env.CLIENT_URL}/login`;
+  return sendEmail({
+    to: email,
+    subject: "Welcome to Our Platform!",
+    template: "welcome",
+    templateData: {
+      name,
+      loginUrl,
+      subject: "Welcome to Our Platform!",
+    },
+  });
 };
 
 /**
@@ -90,34 +132,27 @@ export const sendWelcomeEmail = async (email, name) => {
  */
 export const sendPasswordResetEmail = async (email, resetToken) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
-  const subject = "Password Reset Request";
-  const text = `You requested a password reset. Please click the following link to reset your password: ${resetUrl}`;
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Password Reset Request</h2>
-      <p>You requested a password reset. Please click the button below to reset your password:</p>
-      <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
-      <p>If you didn't request this, please ignore this email.</p>
-      <p>This link will expire in 1 hour.</p>
-    </div>
-  `;
-
-  return sendEmail({ to: email, subject, text, html });
+  return sendEmail({
+    to: email,
+    subject: "Password Reset Request",
+    template: "password-reset",
+    templateData: {
+      resetUrl,
+      subject: "Password Reset Request",
+    },
+  });
 };
 
 export const AccountCreatedEmail = async (email, name) => {
-  const subject = "Account Created";
-  const text = `Hi ${name},\n\nYour account has been created successfully.\n\nBest regards,\nThe Team`;
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Account Created</h2>
-      <p>Hi ${name},</p>
-      <p>Your account has been created successfully. Thank you for joining our platform.</p>
-      <p>If you have any questions, feel free to reach out to our support team.</p>
-      <br>
-      <p>Best regards,<br>The Team</p>
-    </div>
-  `;
-
-  return sendEmail({ to: email, subject, text, html });
+  const loginUrl = `${process.env.CLIENT_URL}/login`;
+  return sendEmail({
+    to: email,
+    subject: "Account Created",
+    template: "welcome",
+    templateData: {
+      name,
+      loginUrl,
+      subject: "Account Created",
+    },
+  });
 };

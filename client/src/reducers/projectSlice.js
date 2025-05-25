@@ -30,15 +30,14 @@ export const handleCreateProject = createAsyncThunk(
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
-  async (_, { rejectWithValue, dispatch }) => {
+  async (_) => {
     try {
       const response = await _fetchProjects();
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
-      console.log("error", error);
-      return rejectWithValue(
-        error.response?.data?.message || "Error fetching projects"
-      );
+      console.log("error lashdkgjsg", error);
+      return error;
+      // return error;
     }
   }
 );

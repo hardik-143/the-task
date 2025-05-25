@@ -80,8 +80,8 @@ import {
 app.get("/test/welcome-email", async (req, res) => {
   try {
     const result = await sendWelcomeEmail(
-      req.query.to || "desaihardik1433@gmail.com",
-      req.query.name || "Hardik"
+      req.query.to || "kavinisarg@gmail.com",
+      req.query.name || "Nisarg"
     );
     res.json({ success: true, message: "Welcome email sent", result });
   } catch (error) {

@@ -10,13 +10,10 @@ export default function Dashboard() {
 
   const [projects, setProjects] = useState([]);
   useEffect(() => {
-    dispatch(fetchProjects())
-      .then((res) => {
-        setProjects(res.payload);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(fetchProjects()).then((res) => {
+      if (!res.payload.success) return;
+      setProjects(res?.payload?.data || []);
+    });
   }, []);
   return (
     <>
@@ -31,14 +28,14 @@ export default function Dashboard() {
           </Link>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {projects.map((project, index) => (
+          {projects?.map((project, index) => (
             <Link
-              to={`/projects/${project._id}`}
+              to={`/projects/${project?._id}`}
               key={index}
               className="bg-white p-4 rounded-md shadow-md"
             >
-              <h3 className="text-lg font-semibold">{project.name}</h3>
-              <p className="text-sm text-gray-600">{project.description}</p>
+              <h3 className="text-lg font-semibold">{project?.name}</h3>
+              <p className="text-sm text-gray-600">{project?.description}</p>
             </Link>
           ))}
         </div>
