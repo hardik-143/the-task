@@ -66,7 +66,8 @@ export const handleLogin = createAsyncThunk(
       dispatch(loginSuccess(response));
       localStorage.setItem("token", response.token);
       console.log("data.from", data.from);
-      const NavigateTo = data.from.pathname || "/dashboard";
+      // const NavigateTo = data.from.pathname || "/dashboard";
+      const NavigateTo = "/";
       console.log("NavigateTo,", NavigateTo);
       return NavigateTo;
     } catch (error) {
@@ -89,7 +90,6 @@ export const handleLogout = createAsyncThunk(
     }
   }
 );
-
 
 const authSlice = createSlice({
   name: "auth",
